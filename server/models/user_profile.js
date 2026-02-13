@@ -3,14 +3,10 @@ const mongoose = require("mongoose");
 
 
 const userProfileSchema = new mongoose.Schema({
-  account: {
+  username: {
     type: Schema.Types.ObjectId,
     ref: "UserAccount",
     required: true, 
-  },
-  fullName: {
-    type: String,
-    required: true,
   },
   profilePicture: {
     type: String, // URL or path to image
