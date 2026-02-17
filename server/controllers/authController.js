@@ -4,7 +4,7 @@ const UserAccount = require('../models/user_account');
 
 exports.signup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
 
     // Check if email exists
     const emailExists = await UserAccount.findOne({ email });
@@ -17,20 +17,22 @@ exports.signup = async (req, res) => {
 
     // Create user
     const user = await UserAccount.create({
-      username,
-      email,
+      email: email.toLowerCase().trim(),
       password: hashedPassword,
+      username: username.trim(),
     });
+
 
     // Generate JWT
     const token = jwt.sign(
-      { id: user._id, role: user.role, username: user.username },
+      { id: user._id, username: user.username },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.status(201).json({ token });
+    res.status(201).json({ message: "User created successfully", token });
 
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -39,16 +41,28 @@ exports.signup = async (req, res) => {
 
 // Login Endpoint Logic
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    try {
+      const { email, password } = req.body;
 
-    const user = await UserAccount.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User Not Found"});
+      const user = await UserAccount.findOne({ email });
+      if (!user) return res.status(404).json({ message: "User Not Found"});
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "incorrect password"});
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return res.status(401).json({ message: "incorrect password"});
 
-    const token = jwt.sign({ id: user._id, role: user.role, username: user.username}, process.env.JWT_SECRET, {
-        expiresIn: '1h'
-    });
-    res.json({ token });
-}
+      const token = jwt.sign({ id: user._id, username: user.username}, process.env.JWT_SECRET, {
+          expiresIn: '1h'
+      });
+      res.json({ token });
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Server error" });
+      }
+};
+
+exports.logout = async (req, res) => {
+  res.clearCookie('refreshtoken')
+	return res.json({
+		message: 'Logged out successfully!',
+	});
+};
