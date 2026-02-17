@@ -22,6 +22,8 @@ exports.signup = async (req, res) => {
       username: username.trim(),
     });
 
+    await user.save();
+
 
     // Generate JWT
     const token = jwt.sign(
