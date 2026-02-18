@@ -25,9 +25,6 @@ const postsSchema = new mongoose.Schema({
       sharedAt: { type: Date, default: Date.now },
     }
   ],
-
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+} , {timestamps: true});
 
 module.exports = mongoose.model('Post', postsSchema);

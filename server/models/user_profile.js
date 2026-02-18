@@ -1,36 +1,42 @@
-// models/UserProfile.js
 const mongoose = require("mongoose");
 
+const userProfileSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserAccount",
+      required: true,
+      unique: true, // one profile per user
+    },
 
-const userProfileSchema = new mongoose.Schema({
-  username: {
-    type: Schema.Types.ObjectId,
-    ref: "UserAccount",
-    required: true, 
+    profilePicture: {
+      type: String,
+    },
+
+    bio: {
+      type: String,
+      maxlength: 250,
+    },
+
+    phone: {
+      type: String,
+    },
+
+    address: {
+      type: String,
+    },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    preferences: {
+      allowNotifications: { type: Boolean, default: true },
+      theme: { type: String, enum: ["light", "dark"], default: "light" },
+    },
   },
-  profilePicture: {
-    type: String, // URL or path to image
-  },
-  bio: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  skills: {
-    type: [String], 
-  },
-  preferences: {
-    notifications: { type: mongoose.Types.ObjectId, ref: "Notification", default: null },
-    theme: { type: String, enum: ["light", "dark"], default: "light" },
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("UserProfile", userProfileSchema);

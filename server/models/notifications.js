@@ -1,17 +1,13 @@
-// models/Notification.js
-const mongoose = require('mongoose');
-
 const notificationSchema = new mongoose.Schema({
-  recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true }, // Who receives it
-  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true }, // Who triggered it
+  recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true },
   type: { 
     type: String, 
     enum: ['like', 'love', 'comment', 'share', 'repost', 'follow'], 
     required: true 
   },
-  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },     // Optional, link to post
-  message: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' }, // Optional, link to message if notification comes from a message
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+  message: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
+  read: { type: Boolean, default: false }, // 👈 add this
   createdAt: { type: Date, default: Date.now },
 });
-
-module.exports = mongoose.model('Notification', notificationSchema);
