@@ -115,10 +115,36 @@ exports.sharePost = async (req, res) => {
   }
 };
 
+exports.getSinglePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Post ID" });
+    }
+
+    const post = await Post.findById(id)
+      .populate("author", "email username")
+      .populate("comments")
+      .populate("reactions.user", "email")
+      .populate("shares.user", "email");
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json(post);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
-      .populate('author', 'email')
+      .populate('author', 'content')
       .populate('comments')
       .sort({ createdAt: -1 });
 
@@ -127,6 +153,29 @@ exports.getAllPosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.searchPosts = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    if (!keyword) {
+      return res.status(400).json({ message: "Keyword is required" });
+    }
+
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: keyword, $options: "i" } },
+        { content: { $regex: keyword, $options: "i" } },
+      ],
+    });
+
+    res.status(200).json(posts);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.deletePost = async (req, res) => {
   try {
