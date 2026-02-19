@@ -46,7 +46,7 @@ exports.getProfileByUserId = async (req, res) => {
   try {
     const profile = await UserProfile.findOne({
       user: req.params.userId,
-    }).populate("user", "email");
+    }).populate("user");
 
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
@@ -77,6 +77,26 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.searchUsers = async (req, res) => {
+  try {
+    const keyword = req.query.keyword;
+
+    if (!keyword) {
+      return res.status(400).json({ message: "Keyword is required" });
+    }
+
+    const users = await UserProfile.find({
+      username: { $regex: keyword, $options: "i" },
+    }).select("username bio profilePicture");
+
+    res.status(200).json(users);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.deleteProfile = async (req, res) => {
   try {
