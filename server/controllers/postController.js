@@ -1,5 +1,5 @@
-const Post = require('../models/Post');
-const Notification = require('../models/Notification');
+const Post = require('../models/posts');
+const Notification = require('../models/notifications');
 
 /**
  * @desc    Create Post

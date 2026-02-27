@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth');
 
 router.post('/', protect, postController.createPost);
 router.get('/:id', protect, postController.getSinglePost);

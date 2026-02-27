@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const notificationSchema = new mongoose.Schema({
   recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true },
   sender: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAccount', required: true },
@@ -11,3 +13,5 @@ const notificationSchema = new mongoose.Schema({
   read: { type: Boolean, default: false }, // 👈 add this
   createdAt: { type: Date, default: Date.now },
 });
+
+module.exports = mongoose.model('Notification', notificationSchema);
