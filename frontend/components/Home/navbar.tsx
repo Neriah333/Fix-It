@@ -4,12 +4,15 @@ import React, { useState } from 'react';
 import { Search, Bell, Plus, MessageSquare, MoreHorizontal, Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import LoginModal from '../Loginmodal.tsx'; // Ensure the path matches your file structure
+import LoginModal from '../Loginmodal.tsx'; 
+import SignupModal from '../SignupModal.tsx'; 
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // State to track if the login modal is visible
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Separate states for each modal
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   return (
     <>
@@ -39,10 +42,10 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* 3. Right Section: Conditional Rendering */}
+        {/* 3. Right Section: Buttons */}
         <div className="flex items-center gap-2 lg:w-[280px] justify-end">
           {isLoggedIn ? (
-            <>
+            <div className="flex items-center gap-1">
               <button className="p-2 text-white hover:bg-[#2D3739] rounded-full hidden md:block">
                 <MessageSquare className="w-5 h-5" />
               </button>
@@ -56,17 +59,17 @@ const Navbar = () => {
                 <div className="w-8 h-8 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-sm" />
                 <span className="text-white text-xs hidden lg:block">▼</span>
               </div>
-            </>
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setIsLoginOpen(true)}
                 className="px-4 py-2 text-sm font-bold text-white hover:bg-[#2D3739] rounded-full transition"
               >
                 Log In
               </button>
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setIsSignupOpen(true)}
                 className="px-4 py-2 text-sm font-bold bg-[#D7DADC] text-black hover:bg-white rounded-full transition"
               >
                 Sign Up
@@ -79,10 +82,14 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Login Modal Component */}
+      {/* Render both modals. They only show up when their state is true */}
       <LoginModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        isOpen={isLoginOpen} 
+        onClose={() => setIsLoginOpen(false)} 
+      />
+      <SignupModal 
+        isOpen={isSignupOpen} 
+        onClose={() => setIsSignupOpen(false)} 
       />
     </>
   );
