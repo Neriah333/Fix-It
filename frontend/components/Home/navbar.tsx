@@ -4,13 +4,12 @@ import React, { useState } from 'react';
 import { Search, Bell, Plus, MessageSquare, MoreHorizontal, Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import LoginModal from '../Loginmodal.tsx'; 
-import SignupModal from '../SignupModal.tsx'; 
+import LoginModal from '../Loginmodal'; 
+import SignupModal from '../SignupModal';
+import { useAuth } from '@/context/AuthContext'; 
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  // Separate states for each modal
+  const { isLoggedIn, user, logout } = useAuth();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
 
@@ -18,17 +17,17 @@ const Navbar = () => {
     <>
       <nav className="sticky top-0 z-50 flex items-center justify-between bg-[#0B1416] px-4 py-1.5 border-b border-[#2D3739]">
         
-        {/* 1. Left Section: Logo */}
+        {/* Left Section */}
         <div className="flex items-center gap-2 lg:w-[280px]">
           <div className="p-2 hover:bg-[#2D3739] rounded-full cursor-pointer lg:hidden">
             <Menu className="text-white w-6 h-6" />
           </div>
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
+          <Link href="/" className="flex items-center gap-2">
             <Image src="/icons/logo.png" alt="Logo" width={40} height={40} />
           </Link>
         </div>
 
-        {/* 2. Middle Section: Search Bar */}
+        {/* Middle Section */}
         <div className="flex-1 max-w-[690px] px-4">
           <div className="relative group">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -42,7 +41,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* 3. Right Section: Buttons */}
+        {/* Right Section */}
         <div className="flex items-center gap-2 lg:w-[280px] justify-end">
           {isLoggedIn ? (
             <div className="flex items-center gap-1">
@@ -55,9 +54,18 @@ const Navbar = () => {
               <button className="p-2 text-white hover:bg-[#2D3739] rounded-full mr-2">
                 <Bell className="w-5 h-5" />
               </button>
-              <div className="flex items-center gap-1 p-1 hover:bg-[#2D3739] rounded-md cursor-pointer">
+              {/* Profile Dropdown Simulation */}
+              <div 
+                onClick={logout} // Temporary logout trigger on click
+                className="flex items-center gap-2 p-1 hover:bg-[#2D3739] rounded-md cursor-pointer group"
+                title="Click to Logout"
+              >
                 <div className="w-8 h-8 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-sm" />
-                <span className="text-white text-xs hidden lg:block">▼</span>
+                <div className="hidden lg:flex flex-col items-start leading-tight">
+                    <span className="text-white text-[11px] font-bold">{user?.username}</span>
+                    <span className="text-gray-400 text-[10px]">1 karma</span>
+                </div>
+                <span className="text-white text-[10px] hidden lg:block">▼</span>
               </div>
             </div>
           ) : (
@@ -82,15 +90,8 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Render both modals. They only show up when their state is true */}
-      <LoginModal 
-        isOpen={isLoginOpen} 
-        onClose={() => setIsLoginOpen(false)} 
-      />
-      <SignupModal 
-        isOpen={isSignupOpen} 
-        onClose={() => setIsSignupOpen(false)} 
-      />
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <SignupModal isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
     </>
   );
 };
