@@ -48,9 +48,11 @@ const Navbar = () => {
               <button className="p-2 text-white hover:bg-[#2D3739] rounded-full hidden md:block">
                 <MessageSquare className="w-5 h-5" />
               </button>
-              <button className="p-2 text-white hover:bg-[#2D3739] rounded-full">
-                <Plus className="w-5 h-5" />
-              </button>
+              <Link href="/submit" title="Create Post">
+                <button className="p-2 text-white hover:bg-[#2D3739] rounded-full">
+                  <Plus className="w-5 h-5" />
+                </button>
+              </Link>
               <button className="p-2 text-white hover:bg-[#2D3739] rounded-full mr-2">
                 <Bell className="w-5 h-5" />
               </button>

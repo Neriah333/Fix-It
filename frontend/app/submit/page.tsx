@@ -2,20 +2,34 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function SubmitPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const router = useRouter();
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Logic to save to your database (e.g., Prisma, Firebase, or an API)
-    console.log("Submitting:", { title, content });
+    try {
+      const response = await fetch('http://localhost:5000/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+          
+         },
+        
+        body: JSON.stringify({ title, content }),
+      });
 
-    // After success, redirect back home
-    router.push('/');
+      if (response.ok) {
+        router.push('/'); // Redirect to home to see the new PostCard
+      } else {
+        console.error("Server responded with an error");
+      }
+    } catch (error) {
+      console.error("Failed to send post:", error);
+  }
   };
 
   return (

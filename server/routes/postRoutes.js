@@ -1,14 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/postController');
-const { protect } = require('../middlewares/auth');
+const {createPost, getSinglePost, getAllPosts, searchPosts,
+      reactToPost, sharePost, deletePost } = require('../controllers/postController');
+const { protect } = require("../middlewares/auth");
 
-router.post('/', protect, postController.createPost);
-router.get('/:id', protect, postController.getSinglePost);
-router.get('/', protect, postController.getAllPosts);
-router.get("/search", protect, postController.searchPosts);
-router.put('/:id/react', protect, postController.reactToPost);
-router.put('/:id/share', protect, postController.sharePost);
-router.delete('/:id', protect, postController.deletePost);
+router.post('/', protect, createPost);
+router.put('/:id/react', protect, reactToPost);
+router.put('/:id/share', protect, sharePost);
+router.delete('/:id', protect, deletePost);
+
+// Public routes don't need protect
+router.get('/:id', getSinglePost);
+router.get('/', getAllPosts);
+router.get('/search', searchPosts);
+
 
 module.exports = router;

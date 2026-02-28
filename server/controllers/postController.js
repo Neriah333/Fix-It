@@ -10,11 +10,16 @@ exports.createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
 
+    if(!req.user) {
+      return res.status(404).json({ message: "User Not Authenticated" });
+    }
+
     const post = await Post.create({
       title,
       content,
       author: req.user.id,
     });
+    
 
     res.status(201).json(post);
   } catch (error) {
