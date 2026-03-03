@@ -12,24 +12,36 @@ export default function SubmitPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/posts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-          
-         },
-        
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ title, content }),
       });
 
+      const data = await response.json();
+      console.log(data);
+
       if (response.ok) {
-        router.push('/'); // Redirect to home to see the new PostCard
+        router.push('/');
       } else {
-        console.error("Server responded with an error");
+        console.error(data.message);
       }
+
     } catch (error) {
       console.error("Failed to send post:", error);
-  }
+    }
   };
 
   return (

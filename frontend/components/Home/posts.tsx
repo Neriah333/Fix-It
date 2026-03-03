@@ -1,51 +1,36 @@
-// app/post/[id]/page.tsx
-import Navbar from '@/components/Home/navbar';
-import Menubar from '@/components/Home/menu';
+// app/page.tsx
+import PostCard from '@/components/Home/postcard';
 
-export default function PostPage({ params }: { params: { id: string } }) {
+async function getAllPosts() {
+  const res = await fetch('http://localhost:5000/api/posts', {
+    cache: 'no-store',
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export default async function HomePage() {
+  const posts = await getAllPosts();
+
   return (
-    <div className="min-h-screen bg-[#0B1416]">
-      <div className="flex max-w-[1400px] mx-auto">
-        <Menubar />
-        
-        <main className="flex-1 p-4 flex justify-center">
-          <div className="max-w-[800px] w-full bg-[#1A282D] rounded-xl border border-[#2D3739] p-6">
-            <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
-              <span>Posted by u/username</span>
-              <span>• 5 hours ago</span>
-            </div>
-            
-            <h1 className="text-2xl font-bold text-white mb-4">
-              Detailed view for post {params.id}
-            </h1>
-            
-            <p className="text-gray-200 mb-6">
-              This is where the full text of the post goes. On this page, users can see all 
-              the comments and nested replies.
-            </p>
+    <div className="max-w-[800px] mx-auto p-4">
+      <h1 className="text-3xl font-bold text-white mb-6">Recent Posts</h1>
 
-            {/* Comment Input Placeholder */}
-            <div className="border border-[#2D3739] rounded-md p-4 mb-8">
-              <p className="text-gray-500 text-sm">Comment as User...</p>
-              <div className="flex justify-end mt-10">
-                <button className="bg-[#D7DADC] text-black px-4 py-1 rounded-full font-bold text-sm">
-                  Comment
-                </button>
-              </div>
-            </div>
+      {posts.length === 0 && <p className="text-gray-400">No posts yet</p>}
 
-            {/* Comments List */}
-            <div className="space-y-6">
-               <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-500" />
-                  <div>
-                    <p className="text-xs font-bold text-white">helpful_user • 2h ago</p>
-                    <p className="text-sm text-gray-300">This is a top-level comment reply!</p>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </main>
+      <div className="space-y-4">
+        {posts.map((post: any) => (
+          <PostCard
+            key={post._id}
+            id={post._id}
+            title={post.title}
+            content={post.content}
+            reactions={post.reactions}
+            comments={post.comments}
+            author={post.author}
+            createdAt={post.createdAt}
+          />
+        ))}
       </div>
     </div>
   );

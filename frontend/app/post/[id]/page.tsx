@@ -1,32 +1,37 @@
-// app/post/[id]/page.tsx
+// app/page.tsx
+import PostCard from '@/components/Home/postcard';
 
-async function getSinglePost(id: string) {
-  // Use your backend's actual URL
-  const res = await fetch(`http://localhost:5000/api/posts/${id}`, {
-    cache: 'no-store' // This ensures you always get fresh data from Mongoose
+async function getAllPosts() {
+  const res = await fetch('http://localhost:5000/api/posts', {
+    cache: 'no-store',
   });
-
-  if (!res.ok) {
-    // This will trigger the closest error.tsx file
-    return null; 
-  }
-
+  if (!res.ok) return [];
   return res.json();
 }
 
-export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
-  // In Next.js 15, you MUST await params
-  const { id } = await params;
-  
-  // Now getSinglePost will be found!
-  const post = await getSinglePost(id);
-
-  if (!post) return <div className="text-white">Post not found</div>;
+export default async function HomePage() {
+  const posts = await getAllPosts();
 
   return (
-    <div className="text-white p-10">
-      <h1 className="text-3xl font-bold">{post.title}</h1>
-      <p className="mt-4">{post.content}</p>
+    <div className="max-w-[800px] mx-auto p-4">
+      <h1 className="text-3xl font-bold text-white mb-6">Recent Posts</h1>
+
+      {posts.length === 0 && <p className="text-gray-400">No posts yet</p>}
+
+      <div className="space-y-4">
+        {posts.map((post: any) => (
+          <PostCard
+            key={post._id}
+            id={post._id}
+            title={post.title}
+            content={post.content}
+            reactions={post.reactions}
+            comments={post.comments}
+            author={post.author}
+            createdAt={post.createdAt}
+          />
+        ))}
+      </div>
     </div>
   );
 }
