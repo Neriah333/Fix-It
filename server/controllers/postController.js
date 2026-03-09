@@ -149,7 +149,7 @@ exports.getSinglePost = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
-      .populate('author', 'content')
+      .populate('author', 'username')
       .populate('comments')
       .sort({ createdAt: -1 });
 
