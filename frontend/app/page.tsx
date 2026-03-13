@@ -6,8 +6,8 @@ import HomePage from './post/[id]/page'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="bg-[#0B1416]">
+    
+      <main className="bg-[#0B1416]">
         <AuthProvider> 
           <Navbar />
           <div className="flex">
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           
         </AuthProvider>
         
-      </body>
-    </html>
+      </main>
+    
   )
 }

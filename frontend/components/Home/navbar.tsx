@@ -85,11 +85,11 @@ const Navbar = () => {
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-[#1A282D] border border-[#2D3739] rounded-md shadow-xl py-1 z-50">
-                    <Link href="/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-[#2D3739] hover:text-white">
+                    <Link href="/settings" onClick={() => setIsDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-[#2D3739] hover:text-white">
                       <User className="w-4 h-4" /> Edit Profile
                     </Link>
                     <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-[#2D3739] hover:text-white w-full">
-                      <Moon className="w-4 h-4" /> Change Mode
+                      <Moon className="w-4 h-4" /> Display Mode
                     </button>
                     <div className="border-t border-[#2D3739] my-1" />
                     <button 
